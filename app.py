@@ -7,7 +7,7 @@ API_KEY = "34dfe96619ed55f0bd1a752f54f18c8b"  # Replace with your actual TMDB AP
 BASE_URL = "https://api.themoviedb.org/3"
 
 # Fetch popular movies
-@st.cache
+@st.cache_data
 def fetch_popular_movies():
     url = f"{BASE_URL}/movie/popular"
     params = {"api_key": API_KEY, "language": "en-US", "page": 1}
