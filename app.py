@@ -4,14 +4,13 @@ import pandas as pd
 
 # TMDB API setup
 API_KEY = "34dfe96619ed55f0bd1a752f54f18c8b"  # Replace with your actual TMDB API key
-BASE_URL = "https://www.themoviedb.org/settings/api"
 
 # Fetch popular movies
 @st.cache_data
 def fetch_popular_movies():
-    url = f"{BASE_URL}/movie/popular"
+    url = f"movie/popular"
     params = {"api_key": API_KEY, "language": "en-US", "page": 1}
-    response = requests.get(url, params=params)
+    response = requests.get(params=params)
     if response.status_code == 200:
         results = response.json()["results"]
         return pd.DataFrame(results)
@@ -21,9 +20,9 @@ def fetch_popular_movies():
 
 # Fetch recommendations based on a movie ID
 def fetch_recommendations(movie_id):
-    url = f"{BASE_URL}/movie/{movie_id}/recommendations"
+    url = f"movie/{movie_id}/recommendations"
     params = {"api_key": API_KEY, "language": "en-US"}
-    response = requests.get(url, params=params)
+    response = requests.get(params=params)
     if response.status_code == 200:
         results = response.json()["results"]
         return results
