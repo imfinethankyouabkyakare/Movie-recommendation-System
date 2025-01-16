@@ -3,7 +3,7 @@ import requests
 import pandas as pd
 
 # TMDB API setup
-API_KEY = "your_tmdb_api_key"  # Replace with your actual TMDB API key
+API_KEY = "34dfe96619ed55f0bd1a752f54f18c8b"  # Replace with your actual TMDB API key
 BASE_URL = "https://api.themoviedb.org/3"
 
 # Fetch popular movies
