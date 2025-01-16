@@ -29,7 +29,7 @@ def fetch_recommendations(movie_id):
 # Main Streamlit app
 def main():
     st.title("Bkins Movie Recommendation System")
-    st.write("Get movie recommendations using the TMDB API.")
+    st.write("Get movie recommendations.")
 
     # Fetch popular movies
     popular_movies = fetch_popular_movies()
