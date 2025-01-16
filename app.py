@@ -4,7 +4,7 @@ import pandas as pd
 
 # TMDB API setup
 API_KEY = "34dfe96619ed55f0bd1a752f54f18c8b"  # Replace with your actual TMDB API key
-BASE_URL = "https://api.themoviedb.org/3"
+BASE_URL = "https://www.themoviedb.org/settings/api"
 
 # Fetch popular movies
 @st.cache_data
@@ -42,4 +42,23 @@ def main():
         st.warning("No movies available. Please check the API connection.")
         return
 
-    # Display a 
+    # Display a dropdown for movie selection
+    movie_list = movies[['id', 'title']].values
+    selected_movie = st.selectbox(
+        "Select a movie you like:",
+        movie_list,
+        format_func=lambda x: x[1]  # Display only the movie title
+    )
+
+    if st.button("Recommend"):
+        movie_id, movie_title = selected_movie
+        recommendations = fetch_recommendations(movie_id)
+        if recommendations:
+            st.write(f"Recommendations based on **{movie_title}**:")
+            for movie in recommendations:
+                st.write(f"- {movie['title']} ({movie['release_date'][:4] if 'release_date' in movie else 'N/A'})")
+        else:
+            st.warning("No recommendations available for this movie.")
+
+if __name__ == "__main__":
+    main()
