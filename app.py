@@ -1,13 +1,12 @@
 import streamlit as st
 import requests
 
-# TMDB API setup
-API_KEY = "34dfe96619ed55f0bd1a752f54f18c8b"  # Replace with your actual TMDB API key
-BASE_URL = "https://api.themoviedb.org/3"
+# TMDB API Key
+API_KEY = "34dfe96619ed55f0bd1a752f54f18c8b"  # Replace with your TMDB API key
 
 # Fetch popular movies
 def fetch_popular_movies():
-    url = f"{BASE_URL}/movie/popular"
+    url = f"https://api.themoviedb.org/3/movie/popular"
     params = {"api_key": API_KEY, "language": "en-US", "page": 1}
     response = requests.get(url, params=params)
     if response.status_code == 200:
@@ -18,7 +17,7 @@ def fetch_popular_movies():
 
 # Fetch recommendations based on a movie ID
 def fetch_recommendations(movie_id):
-    url = f"{BASE_URL}/movie/{movie_id}/recommendations"
+    url = f"https://api.themoviedb.org/3/movie/{movie_id}/recommendations"
     params = {"api_key": API_KEY, "language": "en-US"}
     response = requests.get(url, params=params)
     if response.status_code == 200:
@@ -51,4 +50,10 @@ def main():
         if recommendations:
             st.write(f"Recommendations based on **{movie_title}**:")
             for movie in recommendations:
-                release_date = movie.get("release_date",
+                release_date = movie.get("release_date", "N/A")
+                st.write(f"- **{movie['title']}** (Release Date: {release_date})")
+        else:
+            st.warning("No recommendations available for this movie.")
+
+if __name__ == "__main__":
+    main()
