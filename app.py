@@ -1,33 +1,30 @@
 import streamlit as st
 import requests
-import pandas as pd
 
 # TMDB API setup
 API_KEY = "34dfe96619ed55f0bd1a752f54f18c8b"  # Replace with your actual TMDB API key
+BASE_URL = "https://api.themoviedb.org/3"
 
 # Fetch popular movies
-@st.cache_data
 def fetch_popular_movies():
-    url = f"movie/popular"
+    url = f"{BASE_URL}/movie/popular"
     params = {"api_key": API_KEY, "language": "en-US", "page": 1}
-    response = requests.get(params=params)
+    response = requests.get(url, params=params)
     if response.status_code == 200:
-        results = response.json()["results"]
-        return pd.DataFrame(results)
+        return response.json()["results"]
     else:
-        st.error("Failed to fetch popular movies.")
-        return pd.DataFrame()
+        st.error(f"Failed to fetch popular movies: {response.status_code}")
+        return []
 
 # Fetch recommendations based on a movie ID
 def fetch_recommendations(movie_id):
-    url = f"movie/{movie_id}/recommendations"
+    url = f"{BASE_URL}/movie/{movie_id}/recommendations"
     params = {"api_key": API_KEY, "language": "en-US"}
-    response = requests.get(params=params)
+    response = requests.get(url, params=params)
     if response.status_code == 200:
-        results = response.json()["results"]
-        return results
+        return response.json()["results"]
     else:
-        st.error("Failed to fetch recommendations.")
+        st.error(f"Failed to fetch recommendations: {response.status_code}")
         return []
 
 # Main Streamlit app
@@ -36,28 +33,22 @@ def main():
     st.write("Get movie recommendations using the TMDB API.")
 
     # Fetch popular movies
-    movies = fetch_popular_movies()
-    if movies.empty:
-        st.warning("No movies available. Please check the API connection.")
+    popular_movies = fetch_popular_movies()
+    if not popular_movies:
+        st.warning("No popular movies available. Please check the API connection.")
         return
 
-    # Display a dropdown for movie selection
-    movie_list = movies[['id', 'title']].values
+    # Create a dropdown menu for movie selection
+    movie_options = [(movie["id"], movie["title"]) for movie in popular_movies]
     selected_movie = st.selectbox(
-        "Select a movie you like:",
-        movie_list,
-        format_func=lambda x: x[1]  # Display only the movie title
+        "Select a movie you like:", movie_options, format_func=lambda x: x[1]
     )
 
     if st.button("Recommend"):
         movie_id, movie_title = selected_movie
         recommendations = fetch_recommendations(movie_id)
+
         if recommendations:
             st.write(f"Recommendations based on **{movie_title}**:")
             for movie in recommendations:
-                st.write(f"- {movie['title']} ({movie['release_date'][:4] if 'release_date' in movie else 'N/A'})")
-        else:
-            st.warning("No recommendations available for this movie.")
-
-if __name__ == "__main__":
-    main()
+                release_date = movie.get("release_date",
