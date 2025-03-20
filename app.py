@@ -5,7 +5,7 @@ import agentops
 # TMDB API Key
 API_KEY = "34dfe96619ed55f0bd1a752f54f18c8b"  # Replace with your TMDB API key
 
-agentops.init(api_key="470a571e-3f2a-4434-9cfc-cdc64247d696")
+session=agentops.init(api_key="470a571e-3f2a-4434-9cfc-cdc64247d696")
 
 # Fetch popular movies
 def fetch_popular_movies():
