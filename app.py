@@ -1,8 +1,11 @@
 import streamlit as st
 import requests
+import agentops
 
 # TMDB API Key
 API_KEY = "34dfe96619ed55f0bd1a752f54f18c8b"  # Replace with your TMDB API key
+
+agentops.init(api_key="470a571e-3f2a-4434-9cfc-cdc64247d696")
 
 # Fetch popular movies
 def fetch_popular_movies():
@@ -54,6 +57,8 @@ def main():
                 st.write(f"- **{movie['title']}** (Release Date: {release_date})")
         else:
             st.warning("No recommendations available for this movie.")
+
+    agentops.end_session(session,status='Success')
 
 if __name__ == "__main__":
     main()
